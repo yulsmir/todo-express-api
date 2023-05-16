@@ -23,8 +23,10 @@ const getAllTodos = (req, res) => {
 
 // GET todo item by id
 app.get(`/todos/:id`, (req, res) => {
-  const searchId = req.params.id;
-  const todo = todos?.[searchId - 1];
+  // const searchIndex = todos?.findIndex((item) => item.id === searchId);
+  const searchId = parseInt(req.params.id);
+  const todo = todos.filter((item) => item.id === searchId);
+  console.log(searchId);
   res.json({ todo });
 });
 
