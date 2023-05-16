@@ -1,37 +1,45 @@
 const express = require('express');
+const fs = require('node:fs');
 const app = express();
-const port = 3000;
+const PORT = 3000;
+
+let todos = [];
+
+fs.readFile('./todos.json', (err, data) => {
+  if (err) throw err;
+  todos = JSON.parse(data);
+  console.log(todos);
+});
 
 // GET
 app.get('/', (req, res) => {
-  res.send('Get all todos');
+  res.json({ todos });
 });
 
 app.get('/todos', (req, res) => {
-  res.send('Get all todos');
+  res.json({ todos });
 });
 
 // GET todo item by id
-let id = 1;
-app.get(`/todos/:${id}`, (req, res) => {
-  res.send(`Get todo item with id:${id}`);
+app.get(`/todos/:todoId`, (req, res) => {
+  res.json(req.params);
 });
 
 // POST todo item
-app.post(`/todos/:${id}`, (req, res) => {
-  res.send(`Post todo item with id:${id}`);
-});
+// app.post(`/todos/:${id}`, (req, res) => {
+//   res.send(`Post todo item with id:${id}`);
+// });
 
 // PUT todo item
-app.put(`/todos/:${id}`, (req, res) => {
-  res.send(`Put a todo item with id:${id}`);
-});
+// app.put(`/todos/:${id}`, (req, res) => {
+//   res.send(`Put a todo item with id:${id}`);
+// });
 
 // DELETE todo item
-app.delete(`/todos/:${id}`, (req, res) => {
-  res.send(`Deleted a todo item with id:${id}`);
-});
+// app.delete(`/todos/:${id}`, (req, res) => {
+//   res.send(`Deleted a todo item with id:${id}`);
+// });
 
-app.listen(port, () => {
-  console.log(`Listening port on ${port}`);
+app.listen(PORT, () => {
+  console.log(`Listening port on ${PORT}`);
 });
