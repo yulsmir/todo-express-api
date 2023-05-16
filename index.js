@@ -5,6 +5,11 @@ const PORT = 3000;
 
 let todos = [];
 
+// const searchedItem = todos?.[searchId - 1];
+// const firstItemId = todos[0]?.id;
+// const lastItemId = todos?.length;
+// const currentId = lastItemId + 1;
+
 fs.readFile('./todos.json', (err, data) => {
   if (err) throw err;
   todos = JSON.parse(data);
@@ -12,17 +17,15 @@ fs.readFile('./todos.json', (err, data) => {
 });
 
 // GET
-app.get('/', (req, res) => {
+const getAllTodos = (req, res) => {
   res.json({ todos });
-});
-
-app.get('/todos', (req, res) => {
-  res.json({ todos });
-});
+};
 
 // GET todo item by id
-app.get(`/todos/:todoId`, (req, res) => {
-  res.json(req.params);
+app.get(`/todos/:id`, (req, res) => {
+  const searchId = req.params.id;
+  const todo = todos?.[searchId - 1];
+  res.json({ todo });
 });
 
 // POST todo item
@@ -39,6 +42,9 @@ app.get(`/todos/:todoId`, (req, res) => {
 // app.delete(`/todos/:${id}`, (req, res) => {
 //   res.send(`Deleted a todo item with id:${id}`);
 // });
+
+app.use('/todos', getAllTodos);
+app.use('/', getAllTodos);
 
 app.listen(PORT, () => {
   console.log(`Listening port on ${PORT}`);
