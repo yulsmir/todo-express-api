@@ -1,16 +1,19 @@
+'use strict';
+
 const fs = require('fs');
 const todosFilePath = './todos.json';
 
 // GET all todos
 const getAllTodos = (req, res) => {
-  fs.readFile(todosFilePath, 'utf-8', (err, data) => {
+  fs.readFile(todosFilePath, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       return res.status(404).json({ error: 'Failed load todos. File not found' });
     }
+
     try {
       const todos = JSON.parse(data);
-      res.json(todos);
+      res.status(200).json(todos);
     } catch (error) {
       console.error(error);
       res.status(404).json({ error: 'Failed to read todos file.' });
@@ -18,12 +21,10 @@ const getAllTodos = (req, res) => {
   });
 };
 
-// POST new todo
-
 // GET todo by id
 const getOneTodo = (req, res) => {
   const searchId = parseInt(req.params.id);
-  fs.readFile(todosFilePath, 'utf-8', (err, data) => {
+  fs.readFile(todosFilePath, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       return res.status(404).json({ error: 'Failed to read todos file. File not found' });
@@ -31,7 +32,7 @@ const getOneTodo = (req, res) => {
 
     try {
       const todos = JSON.parse(data);
-      const todo = todos.filter((item) => item.id === searchId);
+      const todo = todos.find((item) => item.id === searchId);
 
       if (!todo) {
         return res.status(404).json({ error: 'Todo item is not found.' });
@@ -49,14 +50,15 @@ const getOneTodo = (req, res) => {
 const deleteTodo = (req, res) => {
   const searchId = parseInt(req.params.id);
 
-  fs.readFile(todosFilePath, 'utf-8', (err, data) => {
+  fs.readFile(todosFilePath, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       return res.status(404).json({ error: 'Failed to read todos file. File not found' });
     }
     try {
-      let todos = JSON.parse(data);
+      const todos = JSON.parse(data);
       const filteredTodos = todos.filter((todo) => todo.id !== searchId);
+      res.sendStatus(204);
 
       if (todos.length === filteredTodos.length) {
         return res.status(404).json({ error: 'Todo item is not found.' });
@@ -67,7 +69,7 @@ const deleteTodo = (req, res) => {
           console.error(err);
           return res.status(404).json({ error: 'Failed to delete todo.' });
         }
-        res.sendStatus(204);
+        res.status(204);
       });
     } catch (error) {
       console.error(error);
@@ -76,8 +78,39 @@ const deleteTodo = (req, res) => {
   });
 };
 
+// POST new todo
+// TODO: fix id unique
+const postTodo = (req, res) => {
+  fs.readFile(todosFilePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(404).json({ error: 'Failed to load todos. File not found' });
+    }
+
+    try {
+      const todos = JSON.parse(data);
+      const newId = todos.length + 1;
+      const newTodo = { id: newId, title: `Title ${newId}`, completed: false };
+
+      todos.push(newTodo);
+
+      fs.writeFile(todosFilePath, JSON.stringify(todos, null, 2), (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(404).json({ error: 'Failed to add new todo.' });
+        }
+        res.sendStatus(204);
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(404).json({ error: 'Failed load todos. File not found' });
+    }
+  });
+};
+
 module.exports = {
   getAllTodos,
   getOneTodo,
   deleteTodo,
+  postTodo,
 };
