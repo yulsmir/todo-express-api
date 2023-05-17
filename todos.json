@@ -1,33 +1,22 @@
-[
-  {
+{
+  "1": {
     "id": 1,
     "title": "Title 1",
     "completed": true
   },
-  {
+  "2": {
     "id": 2,
     "title": "Title 2",
     "completed": true
   },
-  {
-    "id": 3,
-    "title": "Title 3",
+  "3": {
+    "id": 15,
+    "title": "Title 2",
     "completed": true
   },
-  {
-    "id": 4,
-    "title": "Title 4",
-    "completed": true
-  },
-  {
-    "id": 33,
-    "title": "Title 33",
+  "4": {
+    "id": 698,
+    "title": "Title 2",
     "completed": true
   }
-  ,
-  {
-    "id": 22,
-    "title": "Title 22",
-    "completed": true
-  }
-]
+}
