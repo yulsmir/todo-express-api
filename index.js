@@ -1,20 +1,27 @@
 const express = require('express');
 const fs = require('node:fs');
 const app = express();
-// const todosRoutes = require('./routes/todos');
 const PORT = 3000;
 
-let todos = [];
+app.use(express.json());
 
-app.route('/todos').get((req, res) => {
+// GET all todos
+app.get('/todos', (req, res) => {
   fs.readFile('./todos.json', 'utf-8', (err, data) => {
-    if (err) throw err;
-    todos = JSON.parse(data);
-    res.json({ todos });
-    console.log(todos);
+    if (err) {
+      console.error(err);
+      return res.status(err.status.code).json({ error: 'Failed load todos' });
+    }
+    try {
+      const todos = JSON.parse(data);
+      res.json(todos);
+    } catch (error) {
+      console.error(error);
+      res.status(err.status.code).json({ error: 'Failed to read todos file.' });
+    }
   });
-  // res.status(200).json({ todos });
 });
+
 // POST todo item
 // .post((req, res) => {
 //   const newId = todos.length + 1;
@@ -23,29 +30,26 @@ app.route('/todos').get((req, res) => {
 //   res.json({ todos });
 // });
 
-app
-  .route('/todos/:id')
-  // GET todo item by id
-  .get((req, res) => {
-    const searchId = parseInt(req.params.id);
-    const todo = todos.filter((item) => item.id === searchId);
-    // console.log(searchId);
-    res.json({ todo });
-  });
+// app
+//   .route('/todos/:id')
+//   // GET todo item by id
+//   .get((req, res) => {
+//     const searchId = parseInt(req.params.id);
+//     const todo = todos.filter((item) => item.id === searchId);
+//     console.log(todo);
+//     res.json({ todo });
+//   })
 
 //   // PUT todo item
 //   .put((req, res) => {
 //     const searchId = parseInt(req.params.id);
-//     const searchIndex = todos.findIndex((item) => item.id === searchId);
-//     const searchItem = todos.at(searchIndex);
+//     const todo = todos.filter((item) => item.id === searchId);
 
-//     searchItem.title === 'Title'
-//       ? (searchItem.title = 'Title edited')
-//       : (searchItem.title = 'Title edited again');
+//     todo.title === 'Title ' ? (todo.title = 'Title edited') : (todo.title = 'Title edited again');
 
-//     searchItem.completed === false ? (searchItem.completed = true) : (searchItem.completed = false);
-//     res.json({ todo: searchItem });
-//   })
+//     todo.completed === false ? (todo.completed = true) : (todo.completed = false);
+//     res.json({ todo });
+//   });
 
 //   // DELETE todo item
 //   .delete((req, res) => {
