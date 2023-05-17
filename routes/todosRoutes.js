@@ -3,10 +3,13 @@ const todosController = require('../controllers/todosController');
 
 const router = express.Router();
 
-// Get all todos
+// GET all todos
 router.get('/todos', todosController.getAllTodos);
 
-// Get one todo bu id
-router.get('/todos:id', todosController.getOneTodo);
+// GET one todo by id
+router.get('/todos/:id', todosController.getOneTodo);
+
+// DELETE one todo by id
+router.delete('/todos/:id', todosController.deleteTodo);
 
 module.exports = router;

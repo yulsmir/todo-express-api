@@ -31,13 +31,13 @@ const getOneTodo = (req, res) => {
 
     try {
       const todos = JSON.parse(data);
-      const todo = todos.find((item) => item.id === searchId);
+      const todo = todos.filter((item) => item.id === searchId);
 
       if (!todo) {
         return res.status(404).json({ error: 'Todo item is not found.' });
       }
 
-      res.json(todo);
+      res.status(200).json(todo);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Cannot find todos data.' });
