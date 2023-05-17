@@ -2,11 +2,12 @@ const express = require('express');
 const fs = require('node:fs');
 const app = express();
 const PORT = 3000;
+const todosFilePath = './todos.json';
 
 app.use(express.json());
 
 // GET all todos
-app.get('/todos', (req, res) => {
+app.get(todosFilePath, (req, res) => {
   fs.readFile('./todos.json', 'utf-8', (err, data) => {
     if (err) {
       console.error(err);
@@ -18,6 +19,31 @@ app.get('/todos', (req, res) => {
     } catch (error) {
       console.error(error);
       res.status(err.status.code).json({ error: 'Failed to read todos file.' });
+    }
+  });
+});
+
+// GET todo by id
+app.get('/todos/:id', (req, res) => {
+  const todoId = parseInt(req.params.id);
+  fs.readFile(todosFilePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Failed to retrieve todos.' });
+    }
+
+    try {
+      const todos = JSON.parse(data);
+      const todo = todos.find((item) => item.id === todoId);
+
+      if (!todo) {
+        return res.status(404).json({ error: 'Todo item is not found.' });
+      }
+
+      res.json(todo);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Cannot find todos data.' });
     }
   });
 });
