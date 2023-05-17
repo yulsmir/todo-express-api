@@ -7,18 +7,18 @@ const todosFilePath = './todos.json';
 app.use(express.json());
 
 // GET all todos
-app.get(todosFilePath, (req, res) => {
-  fs.readFile('./todos.json', 'utf-8', (err, data) => {
+app.get('/todos', (req, res) => {
+  fs.readFile(todosFilePath, 'utf-8', (err, data) => {
     if (err) {
       console.error(err);
-      return res.status(err.status.code).json({ error: 'Failed load todos' });
+      return res.status(404).json({ error: 'Failed load todos. File not found' });
     }
     try {
       const todos = JSON.parse(data);
       res.json(todos);
     } catch (error) {
       console.error(error);
-      res.status(err.status.code).json({ error: 'Failed to read todos file.' });
+      res.status(404).json({ error: 'Failed to read todos file.' });
     }
   });
 });
@@ -29,7 +29,7 @@ app.get('/todos/:id', (req, res) => {
   fs.readFile(todosFilePath, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: 'Failed to retrieve todos.' });
+      return res.status(404).json({ error: 'Failed to read todos file. File not found' });
     }
 
     try {
@@ -44,6 +44,17 @@ app.get('/todos/:id', (req, res) => {
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Cannot find todos data.' });
+    }
+  });
+});
+
+// DELETE todo by id
+app.delete('/todos/:id', (req, res) => {
+  const searchId = parseInt(req.params.id);
+
+  fs.readFile(todosFilePath, 'utf-8', (err, data) => {
+    if (err) {
+      console.lo;
     }
   });
 });
