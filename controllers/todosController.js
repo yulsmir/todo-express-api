@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const todosFilePath = './todos.json';
+const Todo = require('../models/todo');
 
 // TODO: remove repeating code into a separate functions/constants
 // GET all todos
@@ -91,7 +92,7 @@ const addNewTodo = (req, res) => {
     try {
       const todos = JSON.parse(data);
       const newId = todos.length;
-      const newTodo = { id: newId, title: `Title ${newId}`, completed: false };
+      const newTodo = new Todo(newId, `Title ${newId}`, false);
 
       todos.push(newTodo);
 
