@@ -23,10 +23,12 @@ app.get('/todos', (req, res) => {
   });
 });
 
+// POST new todo
+
 // GET todo by id
 app.get('/todos/:id', (req, res) => {
-  const todoId = parseInt(req.params.id);
-  fs.readFile(todosFilePath, 'utf8', (err, data) => {
+  const searchId = parseInt(req.params.id);
+  fs.readFile(todosFilePath, 'utf-8', (err, data) => {
     if (err) {
       console.error(err);
       return res.status(404).json({ error: 'Failed to read todos file. File not found' });
@@ -34,7 +36,7 @@ app.get('/todos/:id', (req, res) => {
 
     try {
       const todos = JSON.parse(data);
-      const todo = todos.find((item) => item.id === todoId);
+      const todo = todos.find((item) => item.id === searchId);
 
       if (!todo) {
         return res.status(404).json({ error: 'Todo item is not found.' });
@@ -64,6 +66,7 @@ app.delete('/todos/:id', (req, res) => {
       if (todos.length === filteredTodos.length) {
         return res.status(404).json({ error: 'Todo item is not found.' });
       }
+
       fs.writeFile(todosFilePath, JSON.stringify(filteredTodos, null, 2), (err) => {
         if (err) {
           console.error(err);
@@ -77,40 +80,6 @@ app.delete('/todos/:id', (req, res) => {
     }
   });
 });
-
-// POST todo item
-// .post((req, res) => {
-//   const newId = todos.length + 1;
-//   const todo = { id: newId, title: `Title ${newId}`, completed: false };
-//   todos.push(todo);
-//   res.json({ todos });
-// });
-
-// app
-//   .route('/todos/:id')
-//   // GET todo item by id
-//   .get((req, res) => {
-//     const searchId = parseInt(req.params.id);
-//     const todo = todos.filter((item) => item.id === searchId);
-//     console.log(todo);
-//     res.json({ todo });
-//   })
-
-//   // PUT todo item
-//   .put((req, res) => {
-//     const searchId = parseInt(req.params.id);
-//     const todo = todos.filter((item) => item.id === searchId);
-
-//     todo.title === 'Title ' ? (todo.title = 'Title edited') : (todo.title = 'Title edited again');
-
-//     todo.completed === false ? (todo.completed = true) : (todo.completed = false);
-//     res.json({ todo });
-//   });
-
-//   // DELETE todo item
-//   .delete((req, res) => {
-//     res.send(`Deleted a todo item with id:${req.params.id}`);
-//   });
 
 app.listen(PORT, () => {
   console.log(`Listening port on ${PORT}`);
