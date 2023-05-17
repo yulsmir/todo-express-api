@@ -3,6 +3,7 @@
 const fs = require('fs');
 const todosFilePath = './todos.json';
 
+// TODO: remove repeating code into a separate functions/constants
 // GET all todos
 const getAllTodos = (req, res) => {
   fs.readFile(todosFilePath, 'utf8', (err, data) => {
@@ -79,7 +80,7 @@ const deleteTodo = (req, res) => {
 };
 
 // POST new todo
-// TODO: fix id unique
+// TODO: fix id is unique
 const addNewTodo = (req, res) => {
   fs.readFile(todosFilePath, 'utf8', (err, data) => {
     if (err) {
