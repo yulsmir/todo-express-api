@@ -80,7 +80,7 @@ const deleteTodo = (req, res) => {
 
 // POST new todo
 // TODO: fix id unique
-const postTodo = (req, res) => {
+const addNewTodo = (req, res) => {
   fs.readFile(todosFilePath, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
@@ -89,7 +89,7 @@ const postTodo = (req, res) => {
 
     try {
       const todos = JSON.parse(data);
-      const newId = todos.length + 1;
+      const newId = todos.length;
       const newTodo = { id: newId, title: `Title ${newId}`, completed: false };
 
       todos.push(newTodo);
@@ -99,7 +99,40 @@ const postTodo = (req, res) => {
           console.error(err);
           return res.status(404).json({ error: 'Failed to add new todo.' });
         }
-        res.sendStatus(204);
+        res.json(todos);
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(404).json({ error: 'Failed load todos. File not found' });
+    }
+  });
+};
+
+// PATCH existing todo by id
+const updateTodo = (req, res) => {
+  const searchId = parseInt(req.params.id);
+  fs.readFile(todosFilePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(404).json({ error: 'Failed to load todos. File not found' });
+    }
+
+    try {
+      const todos = JSON.parse(data);
+      const todo = todos.find((item) => item.id === searchId);
+      if (!todo) {
+        return res.status(404).json({ error: 'Todo item is not found.' });
+      }
+
+      todo.title !== 'Updated' ? (todo.title = 'Updated') : (todo.title = `Updated again`);
+
+      todo.completed === true ? (todo.completed = false) : (todo.completed = true);
+      fs.writeFile(todosFilePath, JSON.stringify(todos, null, 2), (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(404).json({ error: 'Failed to add new todo.' });
+        }
+        res.json(todo);
       });
     } catch (error) {
       console.error(error);
@@ -112,5 +145,6 @@ module.exports = {
   getAllTodos,
   getOneTodo,
   deleteTodo,
-  postTodo,
+  addNewTodo,
+  updateTodo,
 };

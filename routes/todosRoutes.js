@@ -9,12 +9,15 @@ const router = express.Router();
 router.get('/todos', todosController.getAllTodos);
 
 // POST one todo
-router.post('/todos', todosController.postTodo);
+router.post('/todos', todosController.addNewTodo);
 
 // GET one todo by id
 router.get('/todos/:id', todosController.getOneTodo);
 
 // DELETE one todo by id
 router.delete('/todos/:id', todosController.deleteTodo);
+
+// PATCH one todo by id
+router.patch('/todos/:id', todosController.updateTodo);
 
 module.exports = router;
