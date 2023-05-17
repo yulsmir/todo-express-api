@@ -54,7 +54,26 @@ app.delete('/todos/:id', (req, res) => {
 
   fs.readFile(todosFilePath, 'utf-8', (err, data) => {
     if (err) {
-      console.lo;
+      console.error(err);
+      return res.status(404).json({ error: 'Failed to read todos file. File not found' });
+    }
+    try {
+      let todos = JSON.parse(data);
+      const filteredTodos = todos.filter((todo) => todo.id !== searchId);
+
+      if (todos.length === filteredTodos.length) {
+        return res.status(404).json({ error: 'Todo item is not found.' });
+      }
+      fs.writeFile(todosFilePath, JSON.stringify(filteredTodos, null, 2), (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(404).json({ error: 'Failed to delete todo.' });
+        }
+        res.sendStatus(204);
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(404).json({ error: 'Cannot find todos data.' });
     }
   });
 });
