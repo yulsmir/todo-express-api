@@ -1,50 +1,40 @@
 'use strict';
 
-const fs = require('fs');
-const todosFilePath = './todos.json';
-const Todo = require('../models/todo');
+const { handleFileReadError, handleFileWriteError } = require('../handlers/errorHandlers');
+const { readTodosFile, writeTodosFile } = require('../handlers/fileHandlers');
 
-// TODO: remove repeating code into a separate functions/constants
+const Todo = require('../models/todo');
+const todosFilePath = './todos.json';
+
 // GET all todos
 const getAllTodos = (req, res) => {
-  fs.readFile(todosFilePath, 'utf8', (err, data) => {
+  readTodosFile(todosFilePath, (err, todos) => {
     if (err) {
-      console.error(err);
-      return res.status(404).json({ error: 'Failed load todos. File not found' });
+      handleFileReadError(err, res);
+      return;
     }
 
-    try {
-      const todos = JSON.parse(data);
-      res.status(200).json(todos);
-    } catch (error) {
-      console.error(error);
-      res.status(404).json({ error: 'Failed to read todos file.' });
-    }
+    res.status(200).json(todos);
   });
 };
 
 // GET todo by id
 const getOneTodo = (req, res) => {
   const searchId = parseInt(req.params.id);
-  fs.readFile(todosFilePath, 'utf8', (err, data) => {
+  readTodosFile(todosFilePath, (err, todos) => {
     if (err) {
-      console.error(err);
-      return res.status(404).json({ error: 'Failed to read todos file. File not found' });
+      handleFileReadError(err, res);
+      return;
     }
 
-    try {
-      const todos = JSON.parse(data);
-      const todo = todos.find((item) => item.id === searchId);
+    const todo = todos.find((item) => item.id === searchId);
 
-      if (!todo) {
-        return res.status(404).json({ error: 'Todo item is not found.' });
-      }
-
-      res.status(200).json(todo);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Cannot find todos data.' });
+    if (!todo) {
+      res.status(404).json({ error: 'Todo item not found.' });
+      return;
     }
+
+    res.status(200).json(todo);
   });
 };
 
@@ -52,94 +42,61 @@ const getOneTodo = (req, res) => {
 const deleteTodo = (req, res) => {
   const searchId = parseInt(req.params.id);
 
-  fs.readFile(todosFilePath, 'utf8', (err, data) => {
+  readTodosFile(todosFilePath, (err, todos) => {
     if (err) {
-      console.error(err);
-      return res.status(404).json({ error: 'Failed to read todos file. File not found' });
+      handleFileReadError(err, res);
+      return;
     }
-    try {
-      const todos = JSON.parse(data);
-      const filteredTodos = todos.filter((todo) => todo.id !== searchId);
-      res.sendStatus(204);
 
-      if (todos.length === filteredTodos.length) {
-        return res.status(404).json({ error: 'Todo item is not found.' });
-      }
+    const filteredTodos = todos.filter((todo) => todo.id !== searchId);
 
-      fs.writeFile(todosFilePath, JSON.stringify(filteredTodos, null, 2), (err) => {
-        if (err) {
-          console.error(err);
-          return res.status(404).json({ error: 'Failed to delete todo.' });
-        }
-        res.status(204);
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(404).json({ error: 'Cannot find todos data.' });
+    if (todos.length === filteredTodos.length) {
+      res.status(404).json({ error: 'Todo item not found.' });
+      return;
     }
+
+    writeTodosFile(todosFilePath, filteredTodos, res, 'Todo item deleted successfully.');
   });
 };
 
 // POST new todo
-// TODO: fix id is unique
+// TODO: fix id is unique!!!
 const addNewTodo = (req, res) => {
-  fs.readFile(todosFilePath, 'utf8', (err, data) => {
+  readTodosFile(todosFilePath, (err, todos) => {
     if (err) {
-      console.error(err);
-      return res.status(404).json({ error: 'Failed to load todos. File not found' });
+      handleFileReadError(err, res);
+      return;
     }
 
-    try {
-      const todos = JSON.parse(data);
-      const newId = todos.length;
-      const newTodo = new Todo(newId, `Title ${newId}`, false);
+    const newId = todos.length;
+    const newTodo = new Todo(newId, `Title ${newId}`, false);
 
-      todos.push(newTodo);
+    todos.push(newTodo);
 
-      fs.writeFile(todosFilePath, JSON.stringify(todos, null, 2), (err) => {
-        if (err) {
-          console.error(err);
-          return res.status(404).json({ error: 'Failed to add new todo.' });
-        }
-        res.json(todos);
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(404).json({ error: 'Failed load todos. File not found' });
-    }
+    writeTodosFile(todosFilePath, todos, res, todos);
   });
 };
 
 // PATCH existing todo by id
 const updateTodo = (req, res) => {
   const searchId = parseInt(req.params.id);
-  fs.readFile(todosFilePath, 'utf8', (err, data) => {
+  readTodosFile(todosFilePath, (err, todos) => {
     if (err) {
-      console.error(err);
-      return res.status(404).json({ error: 'Failed to load todos. File not found' });
+      handleFileReadError(err, res);
+      return;
     }
 
-    try {
-      const todos = JSON.parse(data);
-      const todo = todos.find((item) => item.id === searchId);
-      if (!todo) {
-        return res.status(404).json({ error: 'Todo item is not found.' });
-      }
+    const todo = todos.find((item) => item.id === searchId);
 
-      todo.title !== 'Updated' ? (todo.title = 'Updated') : (todo.title = `Updated again`);
-
-      todo.completed === true ? (todo.completed = false) : (todo.completed = true);
-      fs.writeFile(todosFilePath, JSON.stringify(todos, null, 2), (err) => {
-        if (err) {
-          console.error(err);
-          return res.status(404).json({ error: 'Failed to add new todo.' });
-        }
-        res.json(todo);
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(404).json({ error: 'Failed load todos. File not found' });
+    if (!todo) {
+      res.status(404).json({ error: 'Todo item not found.' });
+      return;
     }
+
+    todo.title !== 'Updated' ? (todo.title = 'Updated') : (todo.title = `Updated again`);
+    todo.completed = !todo.completed;
+
+    writeTodosFile(todosFilePath, todos, res, todo);
   });
 };
 
