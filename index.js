@@ -1,14 +1,10 @@
 const express = require('express');
 const fs = require('node:fs');
 const app = express();
+// const todosRoutes = require('./routes/todos');
 const PORT = 3000;
 
 let todos = [];
-
-// const searchedItem = todos?.[searchId - 1];
-// const firstItemId = todos[0]?.id;
-// const lastItemId = todos?.length;
-// const currentId = lastItemId + 1;
 
 fs.readFile('./todos.json', (err, data) => {
   if (err) throw err;
@@ -16,37 +12,48 @@ fs.readFile('./todos.json', (err, data) => {
   console.log(todos);
 });
 
-// GET
-const getAllTodos = (req, res) => {
-  res.json({ todos });
-};
+app
+  .route('/todos')
+  .get((req, res) => {
+    res.status(200).json({ todos });
+  })
+  // POST todo item
+  .post((req, res) => {
+    const newId = todos.length + 1;
+    const todo = { id: newId, title: `Title ${newId}`, completed: false };
+    todos.push(todo);
+    res.json({ todos });
+  });
 
-// GET todo item by id
-app.get(`/todos/:id`, (req, res) => {
-  // const searchIndex = todos?.findIndex((item) => item.id === searchId);
-  const searchId = parseInt(req.params.id);
-  const todo = todos.filter((item) => item.id === searchId);
-  console.log(searchId);
-  res.json({ todo });
-});
+app
+  .route('/todos/:id')
+  // GET todo item by id
+  .get((req, res) => {
+    const searchId = parseInt(req.params.id);
+    const searchIndex = todos.findIndex((item) => item.id === searchId);
+    const searchItem = todos.searchIndex;
+    console.log(searchId);
+    res.json({ todo: searchItem });
+  })
 
-// POST todo item
-// app.post(`/todos/:${id}`, (req, res) => {
-//   res.send(`Post todo item with id:${id}`);
-// });
+  // PUT todo item
+  .put((req, res) => {
+    const searchId = parseInt(req.params.id);
+    const searchIndex = todos.findIndex((item) => item.id === searchId);
+    const searchItem = todos.at(searchIndex);
 
-// PUT todo item
-// app.put(`/todos/:${id}`, (req, res) => {
-//   res.send(`Put a todo item with id:${id}`);
-// });
+    searchItem.title === 'Title'
+      ? (searchItem.title = 'Title edited')
+      : (searchItem.title = 'Title edited again');
 
-// DELETE todo item
-// app.delete(`/todos/:${id}`, (req, res) => {
-//   res.send(`Deleted a todo item with id:${id}`);
-// });
+    searchItem.completed === false ? (searchItem.completed = true) : (searchItem.completed = false);
+    res.json({ todo: searchItem });
+  })
 
-app.use('/todos', getAllTodos);
-app.use('/', getAllTodos);
+  // DELETE todo item
+  .delete((req, res) => {
+    res.send(`Deleted a todo item with id:${req.params.id}`);
+  });
 
 app.listen(PORT, () => {
   console.log(`Listening port on ${PORT}`);
