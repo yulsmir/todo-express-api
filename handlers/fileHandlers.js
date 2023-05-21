@@ -6,7 +6,6 @@ const readTodosFile = (todosFilePath, callback) => {
   fs.readFile(todosFilePath, 'utf8', (err, data) => {
     if (err) {
       callback(err, null);
-      return;
     }
 
     try {
@@ -21,8 +20,7 @@ const readTodosFile = (todosFilePath, callback) => {
 const writeTodosFile = (todosFilePath, todos, res, successMessage) => {
   fs.writeFile(todosFilePath, JSON.stringify(todos, null, 2), (err) => {
     if (err) {
-      handleFileWriteError(err, res);
-      return;
+      return handleFileWriteError(err, res);
     }
 
     res.json(successMessage);
