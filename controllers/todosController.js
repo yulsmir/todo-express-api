@@ -10,8 +10,7 @@ const todosFilePath = './todos.json';
 const getAllTodos = (req, res) => {
   readTodosFile(todosFilePath, (err, todos) => {
     if (err) {
-      handleFileReadError(err, res);
-      return;
+      return handleFileReadError(err, res);
     }
 
     res.status(200).json(todos);
@@ -23,15 +22,13 @@ const getOneTodo = (req, res) => {
   const searchId = parseInt(req.params.id);
   readTodosFile(todosFilePath, (err, todos) => {
     if (err) {
-      handleFileReadError(err, res);
-      return;
+      return handleFileReadError(err, res);
     }
 
     const todo = todos.find((item) => item.id === searchId);
 
     if (!todo) {
-      res.status(404).json({ error: 'Todo item not found.' });
-      return;
+      return res.status(404).json({ error: 'Todo item not found.' });
     }
 
     res.status(200).json(todo);
@@ -44,15 +41,13 @@ const deleteTodo = (req, res) => {
 
   readTodosFile(todosFilePath, (err, todos) => {
     if (err) {
-      handleFileReadError(err, res);
-      return;
+      return handleFileReadError(err, res);
     }
 
     const filteredTodos = todos.filter((todo) => todo.id !== searchId);
 
     if (todos.length === filteredTodos.length) {
-      res.status(404).json({ error: 'Todo item not found.' });
-      return;
+      return res.status(404).json({ error: 'Todo item not found.' });
     }
 
     writeTodosFile(todosFilePath, filteredTodos, res, 'Todo item deleted successfully.');
@@ -64,8 +59,7 @@ const deleteTodo = (req, res) => {
 const addNewTodo = (req, res) => {
   readTodosFile(todosFilePath, (err, todos) => {
     if (err) {
-      handleFileReadError(err, res);
-      return;
+      return handleFileReadError(err, res);
     }
 
     const newId = todos.length;
@@ -82,15 +76,13 @@ const updateTodo = (req, res) => {
   const searchId = parseInt(req.params.id);
   readTodosFile(todosFilePath, (err, todos) => {
     if (err) {
-      handleFileReadError(err, res);
-      return;
+      return handleFileReadError(err, res);
     }
 
     const todo = todos.find((item) => item.id === searchId);
 
     if (!todo) {
-      res.status(404).json({ error: 'Todo item not found.' });
-      return;
+      return res.status(404).json({ error: 'Todo item not found.' });
     }
 
     todo.title !== 'Updated' ? (todo.title = 'Updated') : (todo.title = `Updated again`);
