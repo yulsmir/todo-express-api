@@ -7,7 +7,7 @@ const {
   getOneTodo,
   deleteTodo,
   updateTodo,
-} = require('../controllers/todosController');
+} = require('../utilities/todosController.js');
 
 const router = express.Router();
 

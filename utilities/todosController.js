@@ -1,7 +1,7 @@
 'use strict';
 
 const { handleFileReadError, handleFileWriteError } = require('../handlers/errorHandlers');
-const { readTodosFile, writeTodosFile } = require('../handlers/fileHandlers');
+const { readTodosFile, writeTodosFile } = require('./utilities/fileHandlers');
 
 const Todo = require('../models/todo');
 const todosFilePath = './data/todos.json';
