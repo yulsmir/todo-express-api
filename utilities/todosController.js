@@ -1,6 +1,6 @@
 'use strict';
 
-const { handleFileReadError, handleFileWriteError } = require('../handlers/errorHandlers');
+const { handleFileReadError, handleFileWriteError } = require('../middleware/errorHandler');
 const { readTodosFile, writeTodosFile } = require('./fileController');
 
 const Todo = require('../models/todo');
