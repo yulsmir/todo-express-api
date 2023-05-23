@@ -1,10 +1,5 @@
 [
   {
-    "id": 34567,
-    "title": "Updated again",
-    "completed": true
-  },
-  {
     "id": 777,
     "title": "Updated",
     "completed": false
@@ -51,7 +46,7 @@
   },
   {
     "id": 10,
-    "title": "Title 10",
+    "title": "Updated again",
     "completed": false
   }
 ]
