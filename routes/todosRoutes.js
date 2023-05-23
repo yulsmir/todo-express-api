@@ -1,23 +1,29 @@
 'use strict';
 
 const express = require('express');
-const todosController = require('../controllers/todosController');
+const {
+  getAllTodos,
+  addNewTodo,
+  getOneTodo,
+  deleteTodo,
+  updateTodo,
+} = require('../controllers/todosController');
 
 const router = express.Router();
 
 // GET all todos
-router.get('/todos', todosController.getAllTodos);
+router.get('/todos', getAllTodos);
 
 // POST one todo
-router.post('/todos', todosController.addNewTodo);
+router.post('/todos', addNewTodo);
 
 // GET one todo by id
-router.get('/todos/:id', todosController.getOneTodo);
+router.get('/todos/:id', getOneTodo);
 
 // DELETE one todo by id
-router.delete('/todos/:id', todosController.deleteTodo);
+router.delete('/todos/:id', deleteTodo);
 
 // PATCH one todo by id
-router.patch('/todos/:id', todosController.updateTodo);
+router.patch('/todos/:id', updateTodo);
 
 module.exports = router;
