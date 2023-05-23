@@ -4,7 +4,7 @@ const { handleFileReadError, handleFileWriteError } = require('../handlers/error
 const { readTodosFile, writeTodosFile } = require('../handlers/fileHandlers');
 
 const Todo = require('../models/todo');
-const todosFilePath = './todos.json';
+const todosFilePath = './data/todos.json';
 
 // GET all todos
 const getAllTodos = (req, res) => {
