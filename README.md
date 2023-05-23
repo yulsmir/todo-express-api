@@ -19,7 +19,7 @@ Todo api with express module
 - utilities
   - todosController.js - all requests - GET, POST, DELETE, PATCH requests
   - fileController.js - readTodosFile, writeTodosFile
--middleware
+- middleware
   - errorHandler.js - handleFileReadError, handleFileWriteError
 - modules
   - todo.js - class Todo 
