@@ -35,6 +35,6 @@ Todo api with express module
 4. Open in browser ```localhost:3000``` or ```127.0.0.1:3000```
 5. Check urls and response results in dev tools:
   - ```localhost:3000/todos``` - shows all todos
-  - ```localhost:3000/todos/?id=``` + add number 1-4 to show one existing item in a todo list 
+  - ```localhost:3000/todos/?id=``` + add number 1-12 to show one existing item in a todo list 
   - use Thunder Client or Postman to check POST/PATCH/DELETE requests
 
