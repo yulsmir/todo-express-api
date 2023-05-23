@@ -55,14 +55,13 @@ const deleteTodo = (req, res) => {
 };
 
 // POST new todo
-// TODO: fix id is unique!!!
 const addNewTodo = (req, res) => {
   readTodosFile(todosFilePath, (err, todos) => {
     if (err) {
       return handleFileReadError(err, res);
     }
 
-    const newId = todos.length;
+    const newId = Math.max(...todos.map((todo) => todo.id)) + 1;
     const newTodo = new Todo(newId, `Title ${newId}`, false);
 
     todos.push(newTodo);
