@@ -24,7 +24,7 @@ Todo api with express module
 - modules
   - todo.js - class Todo 
 - routes
-  - todoRoutes.js - routes for all GET, POST, DELETE, PATCH requests
+  - todosRoutes.js - routes for all GET, POST, DELETE, PATCH requests
 - data
   - todos.json - file where all todos are stored  and available upon request
 
