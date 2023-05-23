@@ -16,20 +16,22 @@ Todo api with express module
 - [X] DELETE /todos/1  ---> removes existing todo using the id
 
 ### Files
-- controllers
-   - todosController.js - all requests - GET, POST, DELETE, PATCH requests
-- handlers 
-  - errorHandlers.js - handleFileReadError, handleFileWriteError
-  - fileHandlers.js - readTodosFile, writeTodosFile
+- utilities
+  - todosController.js - all requests - GET, POST, DELETE, PATCH requests
+  - fileController.js - readTodosFile, writeTodosFile
+-middleware
+  - errorHandler.js - handleFileReadError, handleFileWriteError
 - modules
   - todo.js - class Todo 
 - routes
   - todoRoutes.js - routes for all GET, POST, DELETE, PATCH requests
- 
+- data
+  - todos.json - file where all todos are stored  and available upon request
+
 ## Project setup
 1. Clone repo
 2. Run ```npm install``` to install dependencies
-3. Run ```nodemon run``` to start server
+3. Run ```nodemon run``` or ```nodemon index.js```to start server
 4. Open in browser ```localhost:3000``` or ```127.0.0.1:3000```
 5. Check urls and response results in dev tools:
   - ```localhost:3000/todos``` - shows all todos
