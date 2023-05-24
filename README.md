@@ -8,7 +8,6 @@ Todo api with express module
 
 ### Endpoints implemented
 
-- [X] GET  / ---> List all todos
 - [X] GET  /todos ---> List all todos
 - [X] GET  /todos/1 ----> List only single todo 1 in this case is just example of id but it should work with any id stored
 - [X] POST /todos ---> create new todo
